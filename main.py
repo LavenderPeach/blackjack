@@ -13,6 +13,15 @@ class Game:
     def reset(self):
         self.computer_hand = []
         self.user_hand = []
+
+    def hit(self):
+        continue_game = True
+        while continue_game and not self.user_bust():
+          next_move = input("Would you like to draw another card? Type 'Yes' or 'No'")
+          if next_move == 'Yes':
+              self.user_draws
+          else:
+              continue_game = False
     
     def user_draws(self):
         draw(self.user_hand)
