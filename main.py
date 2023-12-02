@@ -17,6 +17,7 @@ class Game:
         self.hit()
         self.computer_limit()
         self.outcome()
+        self.final_score()
 
     def reset(self):
         self.computer_hand = []
@@ -36,6 +37,7 @@ class Game:
 
         if self.user_aces() and self.user_bust():
             self.switch_ace()
+        print(self.user_hand)
 
     def user_aces(self):
       return 11 in self.user_hand
@@ -53,22 +55,31 @@ class Game:
                 draw(self.computer_hand)
         return self.computer_hand
     def outcome(self):
-        if self.user_bust():
+        if sum (self.user_hand) == 21 and len(self.user_hand) == 2 and sum(self.computer_hand) != 21:
+            print("Blackjack!")
+        if sum(self.user_hand) != 21 and sum(self.computer_hand) == 21 and len(self.computer_hand) == 2:
+            print("Dealer has blackjack!")
+        elif self.user_bust():
             print("Bust!!!")
         elif sum(self.user_hand) == sum(self.computer_hand):
             print("Draw!")
         elif sum(self.user_hand) < sum(self.computer_hand) <= 21:
             print("Dealer wins!")
-        elif sum (self.user_hand) == 21 and sum(self.computer_hand) != 21:
-            print("Blackjack!")
         else:
             print("You win!")
     
     def print_hands(self):
         print(f'User Hand: {self.user_hand}')
-        print(f'Computer Hand {self.computer_hand}')
+        print(f'Computer Hand {self.computer_hand[0]}')
 
+    def final_score(self):
+        print(f'Your final score is {sum(self.user_hand)} ({self.user_hand})')
+        print(f'CPU final score is {sum(self.computer_hand)} ({self.computer_hand})')
     def draw_opening(self):
       for i in range(2):
           draw(self.user_hand)
           draw(self.computer_hand)
+
+
+game_instance = Game()
+game_instance.blackjack()
