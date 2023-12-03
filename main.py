@@ -25,25 +25,33 @@ class Game:
         self.user_hand = []
 
     def hit(self):
-        continue_game = True
-        while continue_game and not self.user_bust():
-          self.split()
-          next_move = input("Would you like to draw another card? Type 'Yes' or 'No'")
-          if next_move == 'Yes' and len(self.new_user_hand) <= 2:
+        for i in range(1):
+             self.split()
+             self.first_hand_hit()
+             if self.new_user_hand is not None:
+                self.second_hand_hit()
+
+    def first_hand_hit(self):
+        if self.user_bust():
+            return
+        next_move = input("Would you like to draw another card? Type 'Yes' or 'No'")
+        if next_move == 'Yes':
             self.user_draws()
             print(self.user_hand, self.new_user_hand)
-          elif next_move == 'No' or next_move == 'Yes' and len(self.new_user_hand) >= 1: 
-            second_move = input("For this hand, would you like to draw another card?")
-            if self.new_user_hand is not None:
-                if second_move == 'Yes':
-                    self.split_draw()
-                elif second_move == 'No':
-                    continue_game = False
-            else:
-                continue_game = False
-          else:
-              continue_game = False
-    
+            self.first_hand_hit()
+        elif next_move == 'No':
+            return
+        
+    def second_hand_hit(self):
+        if self.second_bust():
+            return
+        next_move = input("Would you like to draw another card? Type 'Yes' or 'No'")
+        if next_move == 'Yes':
+            self.split_draw()
+            print(self.user_hand, self.new_user_hand)
+            self.second_hand_hit()
+        elif next_move == 'No':
+            return
     def split(self):
         if self.user_hand[0] == self.user_hand[1] and len(self.user_hand) == 2:
             split_choice = input("Would you like to split your hand? Type 'Yes' or 'No'")
@@ -78,9 +86,11 @@ class Game:
       return 11 in self.user_hand
     
     def user_bust(self):
-        if self.new_user_hand is not None:
-            return sum(self.new_user_hand) > 21
         return sum(self.user_hand) > 21
+
+    def second_bust(self):
+        if self.new_user_hand is not None:
+            return sum(self.new_user_hand) > 21 
 
     def switch_ace(self):
           self.user_hand.remove(11)
@@ -118,6 +128,7 @@ class Game:
         print(f'CPU final score is {sum(self.computer_hand)} ({self.computer_hand})')
 
 
+    
     def draw_opening(self):
       for i in range(2):
           draw(self.user_hand)
