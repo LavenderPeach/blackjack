@@ -10,8 +10,13 @@ class Game:
         self.user_hand = None
         self.computer_hand = None
         self.new_user_hand = None
+        self.total_deposit = 0
+        self.risk = 0
 
     def blackjack(self):
+        self.initial_deposit()
+        self.set_risk()
+        self.total_deposit -= self.risk
         self.reset()
         self.draw_opening()
         self.print_hands()
@@ -19,6 +24,26 @@ class Game:
         self.computer_limit()
         self.outcome()
         self.final_score()
+
+
+    def initial_deposit(self):
+        while True:
+            try:
+                self.total_deposit = float(input('Enter the amount that you would like to deposit:'))
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid amount.")
+
+    def set_risk(self):
+        while True:
+            try:
+                self.risk = float(input('Enter the amount you would like to risk per hand'))
+                if self.risk > self.total_deposit:
+                    print("Risk per hand cannot be greater than the total deposit. Please enter a valid amount.")
+                else:
+                    break
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
 
     def reset(self):
         self.computer_hand = []
@@ -32,9 +57,11 @@ class Game:
              if len(self.user_hand) == 3:
                 return
              self.first_hand_hit()
-             if len(self.new_user_hand) == 3 and self.new_user_hand is not None:
-                 return
-             self.second_hand_hit()
+             if self.new_user_hand is not None:
+                 if len(self.new_user_hand) == 3:
+                    return
+                 self.second_hand_hit()
+             return
 
     def first_hand_hit(self):
         if self.user_bust():
@@ -159,7 +186,6 @@ class Game:
         print(f'CPU final score is {sum(self.computer_hand)} ({self.computer_hand})')
 
 
-    
     def draw_opening(self):
       for i in range(2):
           draw(self.user_hand)
