@@ -27,9 +27,14 @@ class Game:
     def hit(self):
         for i in range(1):
              self.split()
+             self.first_double()
+             self.split_double()
+             if len(self.user_hand) == 3:
+                return
              self.first_hand_hit()
-             if self.new_user_hand is not None:
-                self.second_hand_hit()
+             if len(self.new_user_hand) == 3 and self.new_user_hand is not None:
+                 return
+             self.second_hand_hit()
 
     def first_hand_hit(self):
         if self.user_bust():
@@ -60,16 +65,42 @@ class Game:
                 self.new_user_hand = []
                 self.new_user_hand.append(temp)
                 self.user_hand.pop()
+                for i in range(1):
+                    draw(self.user_hand)
+                    draw(self.new_user_hand)
                 print(self.user_hand, self.new_user_hand)
                 return
                 
-
-
             elif split_choice == 'No':
                 return
         else:
             return
+        
+    def first_double(self):
+        if len(self.user_hand) == 2:
+            double_choice = input('Would you like to double down on this hand?')
+            if double_choice == 'Yes':
+                for i in range(1):
+                    self.user_draws()
+                    return
+            elif double_choice == 'No':
+                return
+        return
     
+    def split_double(self):
+        if self.new_user_hand is not None:
+            if len(self.new_user_hand) == 2:
+                double_choice = input('Would you like to double down on this hand?')
+                if double_choice == 'Yes':
+                    for i in range(1):
+                        self.split_draw()
+                        return            
+                elif double_choice == 'No':
+                    return
+            else:
+                return
+        return
+
     def user_draws(self):
         draw(self.user_hand)
         if self.user_aces() and self.user_bust():
